@@ -48,6 +48,7 @@ func main() {
 			sms := strings.Join(sms_content, "\n")
 			fmt.Println("SMS from " + number + ":" + sms)
 			port.Write([]byte("AT+CMGD=" + idx + "\r\n"))
+			//TODO: now as we have the message, we have to call out to the world.
 		}
 	}
 }

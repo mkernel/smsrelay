@@ -44,7 +44,6 @@ func reader(reader io.Reader) {
 				idx := components[1]
 				incoming_sms <- idx
 			}
-			//TODO: we have to send out data from here. But we will go with that one by one...
 			buf = nil
 		}
 	}
