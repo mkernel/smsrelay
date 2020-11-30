@@ -3,11 +3,20 @@ package main
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/jacobsa/go-serial/serial"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
+var database *gorm.DB
+
 func main() {
+
+	database, _ = gorm.Open("sqlite3", "smsstore.sqlite3")
+	database.AutoMigrate(&SMS{})
+
 	options := serial.OpenOptions{
 		PortName:        "/dev/ttyS0",
 		BaudRate:        115200,
@@ -47,6 +56,8 @@ func main() {
 			sms_content := content[2 : len(content)-2]
 			sms := strings.Join(sms_content, "\n")
 			fmt.Println("SMS from " + number + ":" + sms)
+			message := SMS{Number: number, Text: sms, Date: time.Now().Unix()}
+			database.Save(&message)
 			port.Write([]byte("AT+CMGD=" + idx + "\r\n"))
 			//TODO: now as we have the message, we have to call out to the world.
 		}
